@@ -42,14 +42,14 @@ for btc_dict in btc_data:
 	close.append(int(float(btc_dict['close'])))
 
 
-# line_chart=pygal.Line(x_label_rotation=20,show_minor_x_labels=False)
-# line_chart.title='收盘价对数变换(￥)'
-# line_chart.x_labels=dates
-# N=20#x坐标轴每隔20天显示一次
-# line_chart.x_labels_major=dates[::N]
-# close_log=[math.log10(_) for _ in close]
-# line_chart.add('log收盘价',close_log)
-# line_chart.render_to_file('收盘折对数变换价线图(￥).svg')
+line_chart=pygal.Line(x_label_rotation=20,show_minor_x_labels=False)
+line_chart.title='收盘价对数变换(￥)'
+line_chart.x_labels=dates
+N=20#x坐标轴每隔20天显示一次
+line_chart.x_labels_major=dates[::N]
+close_log=[math.log10(_) for _ in close]
+line_chart.add('log收盘价',close_log)
+line_chart.render_to_file('收盘折对数变换价线图(￥).svg')
 
 
 
@@ -83,3 +83,11 @@ weekdays_int=[wd.index(w)+ 1 for w in weekdays[1:idx_week]]
 line_chart_weekday=draw_line(weekdays_int,close[1:idx_week],'收盘价星期均值(￥)','星期均值')
 line_chart_weekday.x_labels=['周一','周二','周三','周四','周五','周六','周日']
 line_chart_weekday.render_to_file('收盘价星期均值（￥）.svg')
+
+with open('收盘价Dashboard.html','w',encoding='utf8')as html_file:
+    html_file.write('<html><head><title>收盘价Dashboard</title><meta charset="utf-8"></head><body>\n')
+    for svg in [
+        '收盘价折线图（￥）.svg','收盘折对数变换价线图(￥).svg','收盘价月日均值（￥）.svg',
+        '收盘价周日均值（￥）.svg','收盘价星期均值（￥）.svg']:
+        html_file.write('   <object type="image/svg+xml" data="{0}" height=500></object>\n'.format(svg))
+    html_file.write('</body></html>')
